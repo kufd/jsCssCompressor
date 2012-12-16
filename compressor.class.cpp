@@ -26,7 +26,46 @@ string Compressor::_merge(vector<string> &files)
 		mergedFileName += "_"+*it;
 	}
 
-	mergedFileName = _md5(mergedFileName);
+	mergedFileName = _cacheDir + "/" +_md5(mergedFileName);
+
+	ifstream mergedFile(mergedFileName.c_str());
+
+	if(!mergedFile || true)
+	{
+		//merge and compress files into tmp file
+		int bufSize = 10240; //10 kb
+		char buffer[bufSize];
+		string tmpArchFileName = (string)tmpnam(NULL) + ".gz";
+		gzFile *tmpArchFile = (gzFile *)gzopen(tmpArchFileName.c_str(), "wb8");
+
+		if(tmpArchFile)
+		{
+			vector<string>::iterator it=files.begin(), ite=files.end();
+			for( ; it!=ite ; it++)
+			{
+				string filePath = _relativePath + "/" + *it;
+				ifstream file(filePath.c_str(), ios::in | ios::binary);
+
+				while(!file.eof())
+				{
+					file.read((char *)&buffer, bufSize);
+					int count=file.gcount();
+					gzwrite(tmpArchFile, (char *)&buffer, count);
+				}
+
+				file.close();
+
+				gzwrite(tmpArchFile, "\n", 1);
+			}
+		}
+
+		gzclose(tmpArchFile);
+
+		//move compressed file
+		rename(tmpArchFileName.c_str(), mergedFileName.c_str());
+	}
+
+	mergedFile.close();
 
 	return mergedFileName;
 }

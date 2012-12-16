@@ -9,13 +9,14 @@ int main()
 
 	Compressor compresor;
 
-	compresor.addJs("/ddd.js");
-	compresor.addJs("/ddd1.js");
+	compresor.addJs("1.txt");
+	compresor.addJs("2.txt");
+	compresor.addJs("3.txt");
 
-	compresor.addCss("/ddd.css");
-	compresor.addCss("/ddd1.css");
+	//compresor.addCss("/ddd.css");
+	//compresor.addCss("/ddd1.css");
 
-	cout<<compresor.getCss()<<endl;
+	//cout<<compresor.getCss()<<endl;
 	cout<<compresor.getJs()<<endl;
 
 }

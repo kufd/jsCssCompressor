@@ -1,5 +1,5 @@
 compressor: compressor.o compressor.class.o
-	g++ -o compressor compressor.o compressor.class.o -lcrypto
+	g++ -o compressor compressor.o compressor.class.o -lcrypto -lz
 
 compressor.o: compressor.cpp
 	g++ -c compressor.cpp

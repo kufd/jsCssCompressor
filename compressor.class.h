@@ -5,6 +5,9 @@
 #include <vector>
 #include <openssl/md5.h>
 #include <fstream>
+#include <iostream>
+#include "zlib.h"
+#include <stdio.h>
 
 
 
