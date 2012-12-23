@@ -26,11 +26,11 @@ string Compressor::_merge(vector<string> &files)
 		mergedFileName += "_"+*it;
 	}
 
-	mergedFileName = _cacheDir + "/" +_md5(mergedFileName);
+	mergedFileName = _cacheDir + "/" +_md5(mergedFileName) + "." + _getFileExtension(*files.begin());
 
 	ifstream mergedFile(mergedFileName.c_str());
 
-	if(!mergedFile || true)
+	if(!mergedFile)
 	{
 		//merge and compress files into tmp file
 		int bufSize = 10240; //10 kb
@@ -70,11 +70,6 @@ string Compressor::_merge(vector<string> &files)
 	return mergedFileName;
 }
 
-void Compressor::_compress()
-{
-
-}
-
 string Compressor::getCss()
 {
 	string file = _merge(_styles);
@@ -99,4 +94,14 @@ string Compressor::_md5(const string& text)
 			hash[8], hash[9], hash[10], hash[11], hash[12], hash[13], hash[14], hash[15]);
 
 	return hashHex;
+}
+
+string Compressor::_getFileExtension(const string &filename)
+{
+	int loc1=filename.rfind(".");
+	if(loc1!= std::string::npos)
+	{
+		return filename.substr(loc1+1);
+	}
+	return "";
 }

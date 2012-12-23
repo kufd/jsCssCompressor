@@ -8,6 +8,11 @@
 #include "config.h"
 #endif
 
+#include "compressor.class.h"
+#include <string>
+
+using namespace std;
+
 extern "C"
 {
 	#include "php.h"

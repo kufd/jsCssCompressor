@@ -29,9 +29,8 @@ class Compressor
     	vector<string> _styles;
 
     	string _merge(vector<string> &files);
-    	void _compress();
     	string _md5(const string& text);
-
+    	string _getFileExtension(const string &filename);
 };
 
 #endif /* COMPRESSOR_H */
