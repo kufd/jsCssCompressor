@@ -16,21 +16,22 @@ using namespace std;
 class Compressor
 {
 	public:
-    	Compressor();
+    	Compressor(string projectPath, string cachePath);
     	void addCss(string path);
     	void addJs(string path);
 
     	 string getCss();
     	 string getJs();
 	private:
-    	string _cacheDir;
-    	string _relativePath;
+    	string _projectPath;
+    	string _cachePath;
     	vector<string> _scripts;
     	vector<string> _styles;
 
     	string _merge(vector<string> &files);
     	string _md5(const string& text);
     	string _getFileExtension(const string &filename);
+    	string _getFileName(const string &path);
 };
 
 #endif /* COMPRESSOR_H */

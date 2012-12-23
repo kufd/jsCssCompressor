@@ -49,8 +49,20 @@ zend_class_entry *jsCssCompressor_ce;
 
 PHP_METHOD(Compressor, __construct)
 {
+	char *c_path, *c_path_cache;
+	int c_path_len, c_path_len_cache;
+
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &c_path, &c_path_len, &c_path_cache, &c_path_len_cache) == FAILURE)
+	{
+	    RETURN_NULL();
+	}
+
+	string projectPath(c_path, c_path_len);
+	string cahePath(c_path_cache, c_path_len_cache);
+
 	Compressor *jsCssCompressor = NULL;
-	jsCssCompressor = new Compressor();
+	jsCssCompressor = new Compressor(projectPath, cahePath);
 	jsCssCompressor_object *obj = (jsCssCompressor_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
 	obj->jsCssCompressor = jsCssCompressor;
 }
@@ -136,7 +148,7 @@ function_entry jsCssCompressor_methods[] = {
 PHP_MINIT_FUNCTION(jsCssCompressor)
 {
     zend_class_entry ce;
-    INIT_CLASS_ENTRY(ce, "jsCssCompressor", jsCssCompressor_methods);
+    INIT_CLASS_ENTRY(ce, "JsCssCompressor", jsCssCompressor_methods);
     jsCssCompressor_ce = zend_register_internal_class(&ce TSRMLS_CC);
     jsCssCompressor_ce->create_object = jsCssCompressor_create_handler;
     memcpy(&jsCssCompressor_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
