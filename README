@@ -1,0 +1,71 @@
+js_css_compressor is a PHP extension which allows you to compress many css or js files into one file.
+This extension implements a class JsCssCompressor which has next methods:
+
+/**
+ * @param string $projectPath - absolute path to project root
+ * @param string $cachePath - path(from project root) to directory where will be saved cached files
+ */
+public function __construct($projectPath, $cachePath);
+
+/**
+ * Method add js file to compressed file
+ * @param string $path - path(from project root) to js file which will be added to compressed file
+ */
+public function addJs($path);
+
+/**
+ * Method add css file to compressed file
+ * @param string $path - path(from project root) to css file which will be added to compressed file
+ */
+public function addCss($path);
+
+/**
+ * Method returns path(from project root) to compressed js file
+ *
+ * @return string
+ */
+public function getJs();
+
+/**
+ * Method returns path(from project root) to compressed css file
+ *
+ * @return string
+ */
+public function getCss();
+
+
+EXAMPLE
+
+$compressor = new JsCssCompressor("/home/user/www/project/", "storage/tmp/");
+
+$compressor->addJs('/storage/css/main.css');
+$compressor->addJs('/storage/css/styles.css');
+$compressor->addJs('/storage/css/green.css');
+$compressor->getCss();
+/* returns string like that: /storage/tmp/31857fa828108968b90745cc98bc3056.css */
+
+$compressor->addJs('/storage/js/main.js');
+$compressor->addJs('/storage/js/jquery.js');
+$compressor->addJs('/storage/js/db.js');
+$compressor->getJs();
+/* returns string like that: /storage/tmp/31857fa828108968b90745cc98bc3056.js */
+
+
+
+
+
+
+
+INSTALLATION
+
+Requirements:
+zlib, openssl
+
+To install this extension you shoul exec next commands from linux console:
+phpize
+./configure --enable-js_css_compressor
+make install
+
+And insert next line into php.ini
+extension=js_css_compressor.so
+

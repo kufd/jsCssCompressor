@@ -1,5 +1,9 @@
 #include "compressor.class.h"
 
+/**
+ * projectPath - absolute path to project root
+ * cachePath - path(from project root) to directory where will be saved cached files
+ */
 Compressor::Compressor(string projectPath, string cachePath)
 {
 	_projectPath = projectPath;
@@ -32,8 +36,8 @@ string Compressor::_merge(vector<string> &files)
 		mergedFileName += "_"+*it;
 	}
 
-	mergedFileRelativePath = _cachePath + _md5(mergedFileName) + "." + _getFileExtension(*files.begin());
-	mergedFileName = _projectPath + mergedFileRelativePath;
+	mergedFileRelativePath = _removeDoubleBackSlashes(_cachePath + "/" + _md5(mergedFileName) + "." + _getFileExtension(*files.begin()));
+	mergedFileName = _removeDoubleBackSlashes(_projectPath + "/" + mergedFileRelativePath);
 
 	ifstream mergedFile(mergedFileName.c_str());
 
@@ -43,36 +47,32 @@ string Compressor::_merge(vector<string> &files)
 		int bufSize = 10240; //10 kb
 		char buffer[bufSize];
 		string tmpArchFileName = mergedFileName + "." + _getFileName(tmpnam(NULL)) + ".gz";
-		//gzFile *tmpArchFile = (gzFile *)gzopen(tmpArchFileName.c_str(), "wb0T");
-		ofstream tmpArchFile(tmpArchFileName.c_str());
+		gzFile *tmpArchFile = (gzFile *)gzopen(tmpArchFileName.c_str(), "wb9T");
 
 		if(tmpArchFile)
 		{
 			vector<string>::iterator it=files.begin(), ite=files.end();
 			for( ; it!=ite ; it++)
 			{
-				string filePath = _projectPath + *it;
+				string filePath = _removeDoubleBackSlashes(_projectPath + "/" + *it);
 				ifstream file(filePath.c_str(), ios::in | ios::binary);
 
 				while(!file.eof())
 				{
 					file.read((char *)&buffer, bufSize);
 					int count=file.gcount();
-					//gzwrite(tmpArchFile, (char *)&buffer, count);
-					tmpArchFile.write((char *)&buffer, count);
+					gzwrite(tmpArchFile, (char *)&buffer, count);
 				}
 
 				file.close();
 
-				//gzwrite(tmpArchFile, "\n", 1);
-				tmpArchFile.write("\n", 1);
+				gzwrite(tmpArchFile, "\n", 1);
 			}
 		}
 
-		//gzclose(tmpArchFile);
-		tmpArchFile.close();
+		gzclose(tmpArchFile);
 
-		//move compressed file
+		//move compressed tmp file
 		rename(tmpArchFileName.c_str(), mergedFileName.c_str());
 	}
 
@@ -81,6 +81,10 @@ string Compressor::_merge(vector<string> &files)
 	return mergedFileRelativePath;
 }
 
+/**
+ * Method returns path(from project root) to compressed file with styles
+ * or empty string if no files were added
+ */
 string Compressor::getCss()
 {
 	string file = _merge(_styles);
@@ -88,6 +92,10 @@ string Compressor::getCss()
 	return file;
 }
 
+/**
+ * Method returns path(from project root) to compressed file with scripts
+ * or empty string if no files were added
+ */
 string Compressor::getJs()
 {
 	string file = _merge(_scripts);
@@ -126,3 +134,14 @@ string Compressor::_getFileName(const string &path)
 	}
 	return path;
 }
+
+string Compressor::_removeDoubleBackSlashes(string str)
+{
+	int pos1;
+	while((pos1 = str.find("//")) != std::string::npos)
+	{
+		str.replace(pos1, 2, "/");
+	}
+	return str;
+}
+

@@ -32,6 +32,7 @@ class Compressor
     	string _md5(const string& text);
     	string _getFileExtension(const string &filename);
     	string _getFileName(const string &path);
+    	string _removeDoubleBackSlashes(string str);
 };
 
 #endif /* COMPRESSOR_H */
