@@ -61,7 +61,7 @@ INSTALLATION
 Requirements:
 zlib, openssl
 
-To install this extension you shoul exec next commands from linux console:
+To install this extension you should execute next commands from linux console:
 phpize
 ./configure --enable-js_css_compressor
 make install
