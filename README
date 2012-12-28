@@ -21,6 +21,7 @@ public function addCss($path);
 
 /**
  * Method returns path(from project root) to compressed js file
+ * or empty string if were not added any js files
  *
  * @return string
  */
@@ -28,6 +29,7 @@ public function getJs();
 
 /**
  * Method returns path(from project root) to compressed css file
+ * or empty string if were not added any css files
  *
  * @return string
  */
