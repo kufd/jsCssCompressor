@@ -47,7 +47,7 @@ string Compressor::_merge(vector<string> &files)
 		int bufSize = 10240; //10 kb
 		char buffer[bufSize];
 		string tmpArchFileName = mergedFileName + "." + _getFileName(tmpnam(NULL)) + ".gz";
-		gzFile *tmpArchFile = (gzFile *)gzopen(tmpArchFileName.c_str(), "wb9T");
+		gzFile tmpArchFile = (gzFile)gzopen(tmpArchFileName.c_str(), "wb9");
 
 		if(tmpArchFile)
 		{

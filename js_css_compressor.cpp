@@ -34,8 +34,11 @@ zend_object_value jsCssCompressor_create_handler(zend_class_entry *type TSRMLS_D
 
     ALLOC_HASHTABLE(obj->std.properties);
     zend_hash_init(obj->std.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
-    zend_hash_copy(obj->std.properties, &type->default_properties,
-        (copy_ctor_func_t)zval_add_ref, (void *)&tmp, sizeof(zval *));
+    #if PHP_VERSION_ID < 50399
+    	zend_hash_copy(obj->std.properties, &type->default_properties, (copy_ctor_func_t)zval_add_ref, (void *)&tmp, sizeof(zval *));
+    #else
+       object_properties_init((zend_object*) &(obj->std), type);
+    #endif
 
     retval.handle = zend_objects_store_put(obj, NULL, jsCssCompressor_free_storage, NULL TSRMLS_CC);
     retval.handlers = &jsCssCompressor_object_handlers;
@@ -136,7 +139,7 @@ PHP_METHOD(Compressor, getJs)
 	RETURN_NULL();
 }
 
-function_entry jsCssCompressor_methods[] = {
+zend_function_entry jsCssCompressor_methods[] = {
     PHP_ME(Compressor, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(Compressor, addCss, NULL, ZEND_ACC_PUBLIC)
     PHP_ME(Compressor, addJs, NULL, ZEND_ACC_PUBLIC)
